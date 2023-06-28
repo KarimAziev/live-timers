@@ -63,10 +63,10 @@ TIMER-SYM is a symbol to use as a timer."
 
 (defun live-timers-list-timers--revert ()
   "Update tabulated entries in the current buffer."
-  (setq tabulated-list-entries (mapcar
-                                (lambda (timer)
+  (setq tabulated-list-entries (seq-map-indexed
+                                (lambda (timer i)
                                   (list
-                                   nil
+                                   i
                                    `[ ;; Idle.
                                      ,(propertize
                                        (if (aref timer 7) "   *" " ")
