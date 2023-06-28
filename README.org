@@ -1,0 +1,66 @@
+#+OPTIONS: ^:nil tags:nil
+
+* About
+
+Add auto-refresh for bultin command ~list-timers~.
+
+* Table of Contents                                       :TOC_2_gh:QUOTE:
+#+BEGIN_QUOTE
+- [[#about][About]]
+- [[#requirements][Requirements]]
+- [[#installation][Installation]]
+  - [[#with-use-package-and-straightel][With use-package and straight.el]]
+  - [[#manual-installation][Manual installation]]
+- [[#usage][Usage]]
+  - [[#customization][Customization]]
+#+END_QUOTE
+
+* Requirements
+
+| Name  | Version |
+|-------+---------|
+| Emacs |    26.1 |
+
+
+* Installation
+
+** With use-package and straight.el
+#+begin_src elisp :eval no
+(use-package live-timers
+  :straight (live-timers
+             :repo "KarimAziev/live-timers"
+             :type git
+             :host github)
+  :hook (timer-list-mode . live-timers-live-mode))
+#+end_src
+
+** Manual installation
+
+Download the source code and put it wherever you like, e.g. into =~/.emacs.d/live-timers/=
+
+#+begin_src shell :eval no
+git clone https://github.com/KarimAziev/live-timers.git ~/.emacs.d/live-timers/
+#+end_src
+
+Add the downloaded directory to the load path:
+
+#+begin_src elisp :eval no
+(add-to-list 'load-path "~/.emacs.d/live-timers/")
+(require 'live-timers)
+
+(add-hook 'timer-list-mode-hook #'live-timers-live-mode)
+#+end_src
+
+* Usage
+
+Add ~live-timers-live-mode~ to ~timer-list-mode-hook~ and run ~M-x list-timers~:
+
+#+begin_src emacs-lisp
+(add-hook 'timer-list-mode-hook #'live-timers-live-mode)
+(list-timers)
+#+end_src
+
+** Customization
+
+**** ~live-timers-refresh-delay~
+How many seconds to wait before refreshing entries in =timer-list-mode=.
