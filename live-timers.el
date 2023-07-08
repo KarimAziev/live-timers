@@ -63,53 +63,54 @@ TIMER-SYM is a symbol to use as a timer."
 
 (defun live-timers-list-timers--revert ()
   "Update tabulated entries in the current buffer."
-  (setq tabulated-list-entries (seq-map-indexed
-                                (lambda (timer i)
-                                  (list
-                                   i
-                                   `[ ;; Idle.
-                                     ,(propertize
-                                       (if (aref timer 7) "   *" " ")
-                                       'help-echo "* marks idle timers"
-                                       'timer timer)
-                                       ;; Next time.
-                                     ,(propertize
-                                       (let ((time (list (aref timer 1)
-                                                         (aref timer 2)
-                                                         (aref timer 3))))
-                                         (format "%12s"
-                                                 (format-seconds
-                                                  "%dd %hh %mm %z%,1ss"
-                                                  (float-time
-                                                   (if (aref
-                                                        timer 7)
-                                                       time
-                                                     (time-subtract
-                                                      time nil))))))
-                                       'help-echo "Time until next invocation")
-                                       ;; Repeat.
-                                     ,(let ((repeat (aref timer 4)))
-                                        (cond ((numberp repeat)
-                                               (propertize
-                                                (format "%12s" (format-seconds
-                                                                "%x%dd %hh %mm %z%,1ss"
-                                                                repeat))
-                                                'help-echo "Repeat interval"))
-                                              ((null repeat)
-                                               (propertize "           -"
-                                                           'help-echo
-                                                           "Runs once"))
-                                              (t
-                                               (format "%12s" repeat))))
-                                               ;; Function.
-                                     ,(propertize
-                                       (let ((cl-print-compiled 'static)
-                                             (cl-print-compiled-button nil)
-                                             (print-escape-newlines t))
-                                         (cl-prin1-to-string (aref timer 5)))
-                                       'help-echo "Function called by timer")]))
-                                (append timer-list timer-idle-list)))
-  (tabulated-list-print t t))
+  (when (get-buffer-window (current-buffer))
+    (setq tabulated-list-entries (seq-map-indexed
+                                  (lambda (timer i)
+                                    (list
+                                     i
+                                     `[ ;; Idle.
+                                       ,(propertize
+                                         (if (aref timer 7) "   *" " ")
+                                         'help-echo "* marks idle timers"
+                                         'timer timer)
+                                         ;; Next time.
+                                       ,(propertize
+                                         (let ((time (list (aref timer 1)
+                                                           (aref timer 2)
+                                                           (aref timer 3))))
+                                           (format "%12s"
+                                                   (format-seconds
+                                                    "%dd %hh %mm %z%,1ss"
+                                                    (float-time
+                                                     (if (aref
+                                                          timer 7)
+                                                         time
+                                                       (time-subtract
+                                                        time nil))))))
+                                         'help-echo "Time until next invocation")
+                                         ;; Repeat.
+                                       ,(let ((repeat (aref timer 4)))
+                                          (cond ((numberp repeat)
+                                                 (propertize
+                                                  (format "%12s" (format-seconds
+                                                                  "%x%dd %hh %mm %z%,1ss"
+                                                                  repeat))
+                                                  'help-echo "Repeat interval"))
+                                                ((null repeat)
+                                                 (propertize "           -"
+                                                             'help-echo
+                                                             "Runs once"))
+                                                (t
+                                                 (format "%12s" repeat))))
+                                                 ;; Function.
+                                       ,(propertize
+                                         (let ((cl-print-compiled 'static)
+                                               (cl-print-compiled-button nil)
+                                               (print-escape-newlines t))
+                                           (cl-prin1-to-string (aref timer 5)))
+                                         'help-echo "Function called by timer")]))
+                                  (append timer-list timer-idle-list)))
+    (tabulated-list-print t t)))
 
 (defun live-timers-list-timers-revert ()
   "Update tabulated entries in the current buffer and reschedule update timer."
