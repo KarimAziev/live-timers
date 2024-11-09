@@ -25,7 +25,7 @@ jobs:
       env:
         LOCAL_REPO: ${{ github.workspace }}
         # RECIPE is your recipe as written for MELPA:
-        RECIPE: (live-timers :repo "KarimAziev/live-timers" :fetcher github)
+        RECIPE: (live-timers :fetcher github :repo "KarimAziev/live-timers")
         # set this to false (or remove it) if the package isn't on MELPA:
         EXIST_OK: false
       run: echo $GITHUB_REF && make -C ~/melpazoid
