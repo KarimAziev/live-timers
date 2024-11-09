@@ -41,7 +41,7 @@
 (defun live-timers--debounce (timer-sym delay fn &rest args)
   "Debounce execution FN with ARGS for DELAY.
 TIMER-SYM is a symbol to use as a timer."
-  (when-let ((timer-value (symbol-value timer-sym)))
+  (when-let* ((timer-value (symbol-value timer-sym)))
     (when (timerp timer-value)
       (cancel-timer timer-value))
     (set timer-sym nil))
